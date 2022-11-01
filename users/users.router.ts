@@ -3,6 +3,18 @@ import { Router } from '../common/router'
 import { User } from './users.model'
 
 class UsersRouter extends Router {
+
+    constructor() {
+        super()
+
+        /**
+         * Removing password from document
+         */
+        this.on('beforeRender', document => {
+            document.password = undefined
+        })
+    }
+
     applyRoutes(application: restify.Server) {
         /**
          * Get All users
