@@ -9,10 +9,7 @@ class UsersRouter extends Router {
          */
         application.get('/users', (req, resp, next) => {
             User.find()
-                .then(users => {
-                    resp.json(users)
-                    return next()
-                })
+                .then(this.render(resp, next))
         })
 
         /**
@@ -20,14 +17,7 @@ class UsersRouter extends Router {
          */
         application.get('/users/:id', (req, resp, next) => {
             User.findById(req.params.id || undefined)
-                .then(user => {
-                    if (user) {
-                        resp.json(user)
-                        return next()
-                    }
-                    resp.send(404)
-                    return next()
-                })
+                .then(this.render(resp, next))
         })
 
         /**
@@ -36,11 +26,7 @@ class UsersRouter extends Router {
         application.post('/users', async (req, resp, next) => {
             let user = new User(req.body)
             user.save()
-                .then(user => {
-                    user.password = undefined
-                    resp.json(user)
-                    return next()
-                })
+                .then(this.render(resp, next))
         })
 
         /**
@@ -50,10 +36,7 @@ class UsersRouter extends Router {
             User.replaceOne({ _id: req.params.id || undefined }, req.body)
                 .then(result => {
                     if (result.matchedCount) {
-                        User.findById(req.params.id).then(user => {
-                            resp.json(user)
-                            return next()
-                        })
+                        User.findById(req.params.id).then(this.render(resp, next))
                     } else {
                         resp.send(404)
                         return next()
@@ -67,15 +50,7 @@ class UsersRouter extends Router {
         application.patch('/users/:id', (req, resp, next) => {
             const options = { new: true }
             User.findByIdAndUpdate(req.params.id || undefined, req.body, options)
-                .then(user => {
-                    if (user) {
-                        resp.json(user)
-                        return next()
-                    } else {
-                        resp.send(404)
-                        return next()
-                    }
-                })
+                .then(this.render(resp, next))
         })
 
         /**
