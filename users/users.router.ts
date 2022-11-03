@@ -49,7 +49,8 @@ class UsersRouter extends Router {
          * Replace User
          */
         application.put('/users/:id', (req, resp, next) => {
-            User.replaceOne({ _id: req.params.id }, req.body)
+            const options = { runValidators: true }
+            User.replaceOne({ _id: req.params.id }, req.body, options)
                 .then(result => {
                     if (result.matchedCount) {
                         User.findById(req.params.id).then(this.render(resp, next))
@@ -64,7 +65,7 @@ class UsersRouter extends Router {
          * Update user
          */
         application.patch('/users/:id', (req, resp, next) => {
-            const options = { new: true }
+            const options = { new: true, runValidators: true }
             User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(resp, next))
                 .catch(next)
