@@ -22,14 +22,16 @@ class UsersRouter extends Router {
         application.get('/users', (req, resp, next) => {
             User.find()
                 .then(this.render(resp, next))
+                .catch(next)
         })
 
         /**
          * Find User
          */
         application.get('/users/:id', (req, resp, next) => {
-            User.findById(req.params.id || undefined)
+            User.findById(req.params.id)
                 .then(this.render(resp, next))
+                .catch(next)
         })
 
         /**
@@ -39,13 +41,14 @@ class UsersRouter extends Router {
             let user = new User(req.body)
             user.save()
                 .then(this.render(resp, next))
+                .catch(next)
         })
 
         /**
          * Replace User
          */
         application.put('/users/:id', (req, resp, next) => {
-            User.replaceOne({ _id: req.params.id || undefined }, req.body)
+            User.replaceOne({ _id: req.params.id }, req.body)
                 .then(result => {
                     if (result.matchedCount) {
                         User.findById(req.params.id).then(this.render(resp, next))
@@ -54,6 +57,7 @@ class UsersRouter extends Router {
                         return next()
                     }
                 })
+                .catch(next)
         })
 
         /**
@@ -61,22 +65,25 @@ class UsersRouter extends Router {
          */
         application.patch('/users/:id', (req, resp, next) => {
             const options = { new: true }
-            User.findByIdAndUpdate(req.params.id || undefined, req.body, options)
+            User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(resp, next))
+                .catch(next)
         })
 
         /**
         * Delete user
         */
         application.del('/users/:id', (req, resp, next) => {
-            User.deleteOne({ _id: req.params.id || undefined }).then(result => {
-                if (result.deletedCount) {
-                    resp.send(204)
-                } else {
-                    resp.send(404)
-                }
-                return next()
-            })
+            User.deleteOne({ _id: req.params.id })
+                .then(result => {
+                    if (result.deletedCount) {
+                        resp.send(204)
+                    } else {
+                        resp.send(404)
+                    }
+                    return next()
+                })
+                .catch(next)
         })
     }
 }

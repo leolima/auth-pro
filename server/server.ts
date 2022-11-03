@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose'
 import { environment } from '../common/environment'
 import { Router } from '../common/router'
 import { mergePatchBodyParser } from './merge-patch.parser'
+import { handleError } from './error.handler'
 
 export class Server {
     application: restify.Server
@@ -30,8 +31,9 @@ export class Server {
 
                 this.application.listen(environment.server.port, () => {
                     resolve(this.application)
-                    //console.log('API is running on http://localhost:4000')zz
                 })
+
+                this.application.on('restifyError', handleError)
 
             } catch (error) {
                 reject(error)
