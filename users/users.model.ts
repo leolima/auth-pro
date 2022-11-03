@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose'
+import { emailRegex } from '../common/utils'
 
 // interfaces are not exported in typescript
 export interface User extends mongoose.Document {
@@ -10,18 +11,26 @@ export interface User extends mongoose.Document {
 
 const userSchema = new mongoose.Schema({
     firstName: {
-        type: String
+        type: String,
+        required: [true, 'Please enter a Name'],
+        minlength: 3
     },
     lastName: {
         type: String
     },
     email: {
         type: String,
-        unique: true
+        lowercase: true,
+        unique: true,// [true, 'This email is already being used'],
+        trim: true,
+        required: true,
+        match: [emailRegex, 'Please enter a valid email address'],
     },
     password: {
         type: String,
-        select: false
+        select: false,
+        required: true,
+        minlength: 6
     }
 })
 
