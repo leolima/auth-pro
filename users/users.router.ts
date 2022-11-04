@@ -3,6 +3,8 @@ import { NotFoundError } from 'restify-errors'
 import { ModelRouter } from '../common/model-router'
 import { Router } from '../common/router'
 import { User } from './users.model'
+import { authenticate } from '../security/auth.handler'
+import { authorize } from '../security/auth.verify'
 
 class UsersRouter extends ModelRouter<User> {
     constructor() {
@@ -22,7 +24,9 @@ class UsersRouter extends ModelRouter<User> {
         application.post(`${ this.basePath }`, this.save)
         application.put(`${ this.basePath }/:id`, [this.validateId, this.replace])
         application.patch(`${ this.basePath }/:id`, [this.validateId, this.update])
-        application.del(`${ this.basePath }/:id`, [this.validateId, this.delete])
+        application.del(`${ this.basePath }/:id`, [authorize('admin'), this.validateId, this.delete])
+
+        application.post(`${ this.basePath }/login`, authenticate)
     }
 }
 
