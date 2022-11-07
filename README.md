@@ -4,7 +4,6 @@
 This is an API project for a role-aware user authentication/registration system, using restify + mondodb.
 
 ## Progress
------
 
 - [x] Routing
 - [x] Hypermedia Rest
@@ -16,7 +15,6 @@ This is an API project for a role-aware user authentication/registration system,
 - [x] Cors configuration
 
 ## Available Scripts
------
 
 Builds the app for production to the dist folder.
 
@@ -38,8 +36,6 @@ Launches the test runner.
 
 
 ## Extra 
------
-
 
 ### Starting mongo db
 
