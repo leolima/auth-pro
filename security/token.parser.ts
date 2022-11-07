@@ -3,6 +3,9 @@ import * as jwt from 'jsonwebtoken'
 import { User } from '../users/users.model'
 import { environment } from '../common/environment'
 
+/**
+ * Verify authentication token 
+ */
 export const tokenParser: restify.RequestHandler = (req, resp, next) => {
     const token = extractToken(req)
     if (token) {
@@ -12,6 +15,9 @@ export const tokenParser: restify.RequestHandler = (req, resp, next) => {
     }
 }
 
+/**
+ * Extract the token from the string `Bearer <token>`
+ */
 function extractToken(req: restify.Request) {
     //Authorization: Bearer TOKEN
     const authorization = req.header('authorization')
@@ -25,6 +31,9 @@ function extractToken(req: restify.Request) {
     return undefined
 }
 
+/**
+ * Puts the user on req if authenticated
+ */
 function applyBearer(req: restify.Request, next): (error, decoded) => void {
     return (error, decoded) => {
         if (decoded) {

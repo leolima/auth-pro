@@ -12,6 +12,9 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
         this.basePath = `/${ model.collection.name }`
     }
 
+    /**
+     * Customizing the response with hypermedia
+     */
     envelope(document: any): any {
         let resource = Object.assign({ _links: {} }, document.toJSON())
         resource._links.self = `${ this.basePath }/${ resource._id }`
@@ -19,6 +22,9 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
         return resource
     }
 
+    /**
+     * Customizing the response with hypermedia
+     */
     envelopeAll(documents: any[], options: any = {}): any {
         const resource: any = {
             _links: {
@@ -39,6 +45,9 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     }
 
 
+    /**
+     * Checks the id before pass to mongo
+     */
     validateId = (req, resp, next) => {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             next(new NotFoundError('Document not found'))

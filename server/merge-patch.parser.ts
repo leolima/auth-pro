@@ -5,10 +5,6 @@ const mpContentType = 'application/merge-patch+json'
 
 /**
  * Body Parser for application/merge-patch+json method
- * @param req 
- * @param resp 
- * @param next 
- * @returns 
  */
 export const mergePatchBodyParser = (req: restify.Request, resp: restify.Response, next) => {
     if (req.getContentType() === mpContentType && req.method === 'PATCH') {

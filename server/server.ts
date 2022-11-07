@@ -19,13 +19,13 @@ export class Server {
     initRoutes(routers: Router[]): Promise<any> {
         return new Promise((resolve, reject) => {
             try {
-
                 const options: restify.ServerOptions = {
                     name: 'auth-pro',
                     version: '1.0.0',
                     log: logger
                 }
 
+                // Enabling https
                 if (environment.security.enableHTTPS) {
                     options.certificate = fs.readFileSync(environment.security.certificate)
                     options.key = fs.readFileSync(environment.security.key)
@@ -33,23 +33,27 @@ export class Server {
 
                 this.application = restify.createServer(options)
 
+                // Cors configs
                 const cors = corsMiddleware({
                     preflightMaxAge: 10, //Optional
                     origins: ['*'],
                     allowHeaders: ['authorization'],
                     exposeHeaders: ['x-custom-header']
                 })
-
                 this.application.pre(cors.preflight)
                 this.application.use(cors.actual)
 
+                // Log config
                 this.application.pre(restify.plugins.requestLogger({
                     log: logger
                 }))
 
+                // Middleware to parse data
                 this.application.use(restify.plugins.queryParser())
                 this.application.use(restify.plugins.bodyParser())
                 this.application.use(mergePatchBodyParser)
+
+                // Bearer authentication parser
                 this.application.use(tokenParser)
 
                 for (let router of routers) {
@@ -60,7 +64,10 @@ export class Server {
                     resolve(this.application)
                 })
 
+                // Centralizing all errors
                 this.application.on('restifyError', handleError)
+
+                // Enabling log responses
                 this.application.on('after', restify.plugins.auditLogger({
                     log: logger,
                     event: 'after'

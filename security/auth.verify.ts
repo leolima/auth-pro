@@ -1,6 +1,9 @@
 import * as restify from 'restify'
 import { ForbiddenError } from 'restify-errors'
 
+/**
+ * Block unauthorized user
+ */
 export const authorize: (...profiles: string[]) => restify.RequestHandler = (...profiles) => {
     return (req, resp, next) => {
         if (req.authenticated !== undefined && req.authenticated.hasAny(...profiles)) {

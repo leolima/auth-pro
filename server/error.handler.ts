@@ -2,10 +2,6 @@ import * as restify from 'restify'
 
 /**
  * Error customization
- * @param req 
- * @param resp 
- * @param err 
- * @param done 
  */
 export const handleError = (req: restify.Request, resp: restify.Response, err, done) => {
     Object.defineProperty(err, 'toJSON', {
