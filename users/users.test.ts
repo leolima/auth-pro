@@ -1,10 +1,8 @@
 import 'jest'
 import * as request from 'supertest'
-import { Server } from '../server/server'
 
-let BASE_URL = (<any>global).address
-let server: Server
-
+const BASE_URL = (<any>global).address
+const auth: string = (<any>global).auth
 
 test('get /users', () => {
     return request(BASE_URL)
@@ -52,7 +50,7 @@ test('patch /users/:id', () => {
             request(BASE_URL)
                 .patch(`/users/${ response.body._id }`)
                 .send({
-                    name: 'usuario2 - patch'
+                    firstName: 'usuario2 - patch'
                 })
                 .then(response => {
                     expect(response.status).toBe(200)

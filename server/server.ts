@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as restify from 'restify'
 import * as mongoose from 'mongoose'
 import { Router } from '../common/router'
@@ -17,10 +18,17 @@ export class Server {
         return new Promise((resolve, reject) => {
             try {
 
-                this.application = restify.createServer({
+                const options: restify.ServerOptions = {
                     name: 'auth-pro',
                     version: '1.0.0',
-                })
+                }
+
+                if (environment.security.enableHTTPS) {
+                    options.certificate = fs.readFileSync(environment.security.certificate)
+                    options.key = fs.readFileSync(environment.security.key)
+                }
+
+                this.application = restify.createServer(options)
 
                 this.application.use(restify.plugins.queryParser())
                 this.application.use(restify.plugins.bodyParser())

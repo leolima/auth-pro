@@ -1,8 +1,11 @@
 {
+    "ts-node": {
+        "files": true
+    },
     "compilerOptions": {
         "outDir": "dist",
         "target": "ES6",
-        "module": "CommonJS"
+        "module": "CommonJS",
     },
     "exclude": [
         "**/*.test.ts"
