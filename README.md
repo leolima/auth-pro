@@ -42,7 +42,7 @@ Launches the test runner.
 I advise using docker to instantiate the database
 
 ```
-docker run -d -p 27017:27017 -v /project-folder-data/db --name auth-mongo mongo
+docker run -d -p 27017:27017 -v /project-folder-data/db:/data/db --name auth-mongo mongo
 ```
 
 ### Load test example:
