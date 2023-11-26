@@ -1,7 +1,7 @@
 import * as restify from 'restify'
 import * as jwt from 'jsonwebtoken'
-import { User } from '../users/users.model'
 import { environment } from '../common/environment'
+import db from '../db/mysql'
 
 /**
  * Verify authentication token 
@@ -35,14 +35,14 @@ function extractToken(req: restify.Request) {
  * Puts the user on req if authenticated
  */
 function applyBearer(req: restify.Request, next): (error, decoded) => void {
-    return (error, decoded) => {
+    return (_error, decoded) => {
         if (decoded) {
-            User.findByEmail(decoded.sub).then(user => {
-                if (user) {
+            db.users().byEmail(decoded.sub).then(user => {
+                if(user) {
                     req.authenticated = user
                 }
                 next()
-            })
+            }).catch(next)
         } else {
             next()
         }

@@ -12,10 +12,6 @@ import { logger } from '../common/logger'
 export class Server {
     application: restify.Server
 
-    initializeDb() {
-        return mongoose.connect(environment.db.url)
-    }
-
     initRoutes(routers: Router[]): Promise<any> {
         return new Promise((resolve, reject) => {
             try {
@@ -80,9 +76,8 @@ export class Server {
     }
 
     bootstrap(routers: Router[] = []): Promise<Server> {
-        return this.initializeDb()
-            .then(() => this.initRoutes(routers)
-                .then(() => this))
+        return this.initRoutes(routers)
+                .then(() => this);
     }
 
     shutdown() {

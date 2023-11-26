@@ -5,23 +5,27 @@ import { ForbiddenError } from 'restify-errors'
  * Block unauthorized user
  */
 export const authorize: (...profiles: string[]) => restify.RequestHandler = (...profiles) => {
-    return (req, resp, next) => {
-        if (req.authenticated !== undefined && req.authenticated.hasAny(...profiles)) {
-            req.log.debug('User %s is authorized with profiles %j on route %s. Required profiles: %j.',
-                req.authenticated._id,
-                req.authenticated.profiles,
+    return (req, _resp, next) => {
+        const hasProfiles = profiles.length > 0 ? profiles.includes(req?.authenticated?.role) : true;
+        if (req.authenticated !== undefined && hasProfiles) {
+            if (`${req.authenticated.email}`.includes('deleted')) { 
+                next(new ForbiddenError("Acesso negado!"))
+            }
+            console.log('-----------------------------------')
+            req.log.debug('***** Usuário %s autorizado para acessar a rota %s.',
+                req.authenticated.id,
                 req.path(),
-                profiles
             )
             next()
         } else {
+            console.log('-------------- Error --------------')
             if (req.authenticated) {
-                req.log.debug('Permission denied for %s. Required profiles: %j. User profiles: %j',
-                    req.authenticated._id,
-                    profiles,
-                    req.authenticated.profiles)
+                req.log.debug('***** Acesso negado! Usuário ID: %s. Rota %s',
+                    req.authenticated.id,
+                    req.path(),
+                )
             }
-            next(new ForbiddenError("Permission denied"))
+            next(new ForbiddenError("Acesso negado!"))
         }
     }
 }

@@ -13,8 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cpf-cnpj-validator": "^1.0.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.0",
+    "mysql": "^2.18.1",
     "restify": "^8.6.1",
     "restify-cors-middleware2": "^2.1.2",
     "restify-errors": "^8.0.2"
